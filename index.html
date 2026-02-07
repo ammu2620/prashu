@@ -3,17 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Valentine’s Week 💗</title>
+  <title>Valentine’s Week 💗 (Feb 7 → 14)</title>
 
   <style>
     :root{
       --card: rgba(255,255,255,.78);
-      --text:#111827;
-      --muted:#6b7280;
-      --accent:#db2777;
-      --shadow: 0 16px 55px rgba(0,0,0,.14);
+      --card2: rgba(255,255,255,.60);
+      --text: #111827;
+      --muted: rgba(17,24,39,.70);
+      --accent: #db2777;
+      --shadow: 0 18px 60px rgba(0,0,0,.18);
+      --radius: 26px;
     }
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box }
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -21,295 +23,348 @@
       min-height:100vh;
       overflow-x:hidden;
       background:
-        radial-gradient(900px 600px at 10% 10%, rgba(255, 120, 190, .30), transparent 60%),
-        radial-gradient(900px 650px at 90% 20%, rgba(120, 210, 255, .26), transparent 60%),
-        radial-gradient(900px 650px at 50% 95%, rgba(255, 220, 130, .28), transparent 60%),
-        linear-gradient(180deg, #fff1f2, #fce7f3);
-    }
-
-    /* ====== ENTER OVERLAY (needed for autoplay permission) ====== */
-    #enterOverlay{
-      position:fixed; inset:0; z-index:9999;
-      display:grid; place-items:center;
-      background:
         radial-gradient(900px 600px at 10% 15%, rgba(255, 120, 190, .55), transparent 60%),
         radial-gradient(850px 520px at 90% 25%, rgba(120, 210, 255, .55), transparent 60%),
         radial-gradient(900px 650px at 35% 90%, rgba(255, 230, 130, .55), transparent 60%),
+        radial-gradient(900px 650px at 80% 85%, rgba(170, 130, 255, .50), transparent 60%),
         linear-gradient(180deg, #fff1f8, #f6f0ff);
+    }
+
+    /* --------- GATE (tap-to-enter overlay) --------- */
+    #gate{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      display:grid;
+      place-items:center;
+      padding:20px;
       overflow:hidden;
     }
-    #enterOverlay.hidden{display:none}
-    .enterCard{
-      width:min(560px, 92vw);
-      background: rgba(255,255,255,.65);
-      border: 1px solid rgba(255,255,255,.75);
-      backdrop-filter: blur(12px);
-      border-radius: 28px;
-      padding: 18px;
-      box-shadow: 0 30px 90px rgba(0,0,0,.18);
-      text-align:center;
+    #gate::before, #gate::after{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(255, 0, 120, .20), transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(0, 180, 255, .18), transparent 55%),
+        radial-gradient(circle at 60% 80%, rgba(255, 220, 0, .18), transparent 55%),
+        radial-gradient(circle at 25% 85%, rgba(140, 80, 255, .18), transparent 55%);
+      filter: blur(18px);
+      opacity:.9;
+      animation: blobsMove 10s ease-in-out infinite;
+      pointer-events:none; /* IMPORTANT: do not block taps */
     }
-    .enterTitle{
-      margin:0;
-      font-size:26px;
-      font-weight:900;
-      color:#db2777;
-      text-shadow:0 2px 10px rgba(219,39,119,.20);
+    #gate::after{ opacity:.65; animation-duration:14s; animation-direction:reverse; }
+    @keyframes blobsMove{
+      0%{ transform: translate(-2%, -1%) scale(1); }
+      50%{ transform: translate(2%, 1%) scale(1.05); }
+      100%{ transform: translate(-2%, -1%) scale(1); }
     }
-    .enterSub{
-      margin:10px 0 0;
-      color:#374151;
-      font-weight:800;
-    }
-    .enterBtn{
-      margin-top:16px;
-      display:inline-block;
-      padding:14px 22px;
-      border-radius:999px;
-      border:1px solid rgba(219,39,119,.45);
-      background: rgba(255,255,255,.85);
-      box-shadow: 0 12px 28px rgba(219,39,119,.18);
-      font-weight:900;
-      cursor:pointer;
-      user-select:none;
-    }
-    .enterBtn span{ color:#db2777; }
 
-    /* ====== LAYOUT ====== */
-    .wrap{max-width:980px;margin:0 auto;padding:22px 16px 72px;}
-    .top{
-      display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-    .brand{
-      display:flex; align-items:center; gap:12px;
-      background: var(--card);
-      border:1px solid rgba(255,255,255,.8);
-      border-radius:22px;
-      padding:12px 14px;
+    .gateCard{
+      width:min(560px, 94vw);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 1px solid rgba(255,255,255,.8);
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
+      padding: 22px 18px 18px;
+      text-align:center;
+      position:relative;
+      z-index:2;
+      pointer-events:auto;
     }
-    .badge{
-      width:46px;height:46px;border-radius:16px;
-      background: linear-gradient(135deg,#f43f5e,#db2777);
-      color:#fff; display:grid; place-items:center;
-      box-shadow:0 12px 30px rgba(219,39,119,.25);
-      font-size:20px;
+    .gateTitle{
+      margin:0;
+      font-size: 34px;
+      font-weight: 1000;
+      letter-spacing:.2px;
+      color: var(--accent);
+      text-shadow: 0 2px 10px rgba(219,39,119,.18);
     }
-    h1{margin:0;font-size:18px}
-    .sub{margin:4px 0 0; color:var(--muted); font-size:13px; font-weight:700}
-
-    .hint{
-      background: rgba(255,255,255,.60);
-      border:1px solid rgba(255,255,255,.75);
-      border-radius:18px;
-      padding:10px 12px;
-      box-shadow:0 10px 25px rgba(0,0,0,.08);
-      backdrop-filter: blur(10px);
-      font-size:13px;
-      color:#374151;
+    .gateSub{
+      margin: 8px 0 14px;
+      font-weight: 800;
+      color: var(--muted);
+    }
+    .enterBtn{
+      border:0;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid rgba(219,39,119,.35);
+      box-shadow: 0 12px 28px rgba(219,39,119,.18);
+      font-weight: 950;
+      font-size: 17px;
+      cursor: pointer;
+      user-select:none;
+      pointer-events:auto;
+    }
+    .enterBtn span{ color: var(--accent); }
+    .gateHint{
+      margin: 14px 0 0;
+      font-size: 13px;
+      font-weight: 800;
+      color: rgba(17,24,39,.55);
+    }
+    .tiny{
+      margin-top:8px;
+      font-size:12px;
+      color: rgba(17,24,39,.55);
       font-weight:700;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap:12px;
-      margin-top:14px;
+    /* --------- MAIN WRAP --------- */
+    #app{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px 14px 90px;
+      opacity:0;
+      transform: translateY(8px);
+      transition: opacity .7s ease, transform .7s ease;
     }
-    @media(max-width:900px){ .grid{grid-template-columns: repeat(2, 1fr);} }
+    body.entered #app{
+      opacity:1;
+      transform: translateY(0);
+    }
+    body.entered #gate{ display:none; }
 
-    .dayCard{
-      background: var(--card);
-      border:1px solid rgba(255,255,255,.85);
-      border-radius:24px;
-      padding:14px;
+    .topCard{
+      background: rgba(255,255,255,.72);
+      border: 1px solid rgba(255,255,255,.82);
+      border-radius: 24px;
+      padding: 16px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
-      position:relative;
-      overflow:hidden;
-      cursor:pointer;
-      transition: transform .18s ease;
-      min-height: 130px;
     }
-    .dayCard:hover{ transform: translateY(-2px); }
-
-    .dayTitle{
-      font-weight:950;
-      font-size:16px;
-      margin:0;
-      display:flex; align-items:center; gap:8px;
-    }
-    .dateLine{
-      margin:6px 0 0;
-      font-size:12px;
-      color:var(--muted);
-      font-weight:800;
-    }
-    .status{
-      margin-top:10px;
-      display:inline-block;
-      padding:7px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:950;
-      border:1px solid rgba(255,255,255,.75);
-      background: rgba(255,255,255,.72);
-    }
-    .status.locked{ color:#6b7280; }
-    .status.open{ color:#047857; }
-    .status.today{ color:#b45309; }
-
-    .countmini{
-      margin-top:10px;
-      font-size:12px;
-      color:#374151;
-      font-weight:900;
-    }
-
-    /* ====== LOCK OVERLAY + SHAKE ====== */
-    .lockOverlay{
-      position:absolute; inset:0;
-      background: rgba(255,255,255,.62);
-      display:grid; place-items:center;
-      backdrop-filter: blur(7px);
-    }
-    .lockBox{
-      text-align:center;
-      padding:14px 12px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.80);
-      background: rgba(255,255,255,.72);
-      box-shadow:0 10px 25px rgba(0,0,0,.12);
-      max-width: 240px;
-    }
-    .lockBox b{display:block;margin-bottom:6px}
-    .lockBox small{color:#6b7280;font-weight:800}
-    .shake{
-      animation: shake .45s ease;
-    }
-    @keyframes shake{
-      0%{transform:translateX(0)}
-      25%{transform:translateX(-6px)}
-      50%{transform:translateX(6px)}
-      75%{transform:translateX(-4px)}
-      100%{transform:translateX(0)}
-    }
-
-    /* ====== MODAL (FULLSCREEN BACKGROUND IMAGE) ====== */
-    #modal{
-      position:fixed; inset:0;
-      display:none;
-      z-index:9998;
-      background: rgba(0,0,0,.60);
-    }
-    #modal.show{ display:block; }
-
-    .modalBg{
-      position:absolute; inset:0;
-      background-size: cover;
-      background-position:center;
-      filter: saturate(1.05) contrast(1.05);
-      transform: scale(1.02);
-    }
-    .modalShade{
-      position:absolute; inset:0;
-      background:
-        radial-gradient(900px 600px at 20% 20%, rgba(255,255,255,.20), transparent 60%),
-        linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.55));
-    }
-
-    .modalCard{
-      position:relative;
-      width:min(900px, 92vw);
-      margin: 26px auto;
-      border-radius: 28px;
-      overflow:hidden;
-      box-shadow: 0 30px 90px rgba(0,0,0,.40);
-      border:1px solid rgba(255,255,255,.20);
-      backdrop-filter: blur(10px);
-    }
-    .modalTop{
-      padding:14px 16px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      background: rgba(255,255,255,.14);
-      color:#fff;
-    }
-    .modalTop h2{
-      margin:0;
-      font-size:16px;
-      font-weight:950;
-      text-shadow:0 10px 25px rgba(0,0,0,.35);
-    }
-    .closeBtn{
-      border:0;
-      background: rgba(255,255,255,.85);
-      border-radius:999px;
-      padding:10px 12px;
-      cursor:pointer;
-      font-weight:950;
-    }
-
-    .modalBody{
-      padding:16px;
-      display:grid;
-      grid-template-columns: 1fr;
+    .headerRow{
+      display:flex;
       gap:12px;
-      color:#fff;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
     }
-
-    .storyBox{
-      background: rgba(255,255,255,.14);
-      border:1px solid rgba(255,255,255,.18);
-      border-radius:22px;
-      padding:14px;
-      box-shadow: 0 14px 35px rgba(0,0,0,.18);
-      line-height:1.75;
-      font-size:14px;
-      white-space:pre-wrap;
-      text-shadow:0 10px 25px rgba(0,0,0,.25);
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight: 1000;
+      letter-spacing:.2px;
+    }
+    .badge{
+      width: 46px; height:46px;
+      border-radius: 16px;
+      display:grid; place-items:center;
+      background: linear-gradient(135deg, #f43f5e, #db2777);
+      color:white;
+      box-shadow: 0 10px 22px rgba(219,39,119,.25);
+      font-size: 22px;
+    }
+    .brandText h1{
+      margin:0;
+      font-size: 20px;
+    }
+    .brandText p{
+      margin:4px 0 0;
+      font-size: 12px;
+      font-weight: 800;
+      color: rgba(17,24,39,.60);
     }
 
     .controls{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
-      margin-top:6px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
     }
-    .pill{
-      display:inline-block;
-      padding:10px 12px;
-      border-radius:999px;
-      background: rgba(255,255,255,.85);
-      color:#111827;
-      border:1px solid rgba(255,255,255,.8);
-      font-weight:950;
-      font-size:12px;
-    }
-    .btn{
+    button.pill{
       border:0;
       padding:10px 14px;
       border-radius:999px;
-      background: rgba(255,255,255,.85);
-      border:1px solid rgba(255,255,255,.8);
+      background:#fff;
+      border: 1px solid rgba(255,255,255,.8);
+      box-shadow: 0 10px 20px rgba(0,0,0,.10);
       cursor:pointer;
-      font-weight:950;
-      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+      font-weight:900;
     }
-    .btn.primary{
-      background: linear-gradient(135deg,#f43f5e,#db2777);
+    button.pill.primary{
+      background: var(--accent);
       color:#fff;
+      border: 1px solid rgba(219,39,119,.35);
+    }
+
+    /* --------- DAYS GRID --------- */
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap:12px;
+    }
+    @media (min-width: 860px){
+      .grid{ grid-template-columns: repeat(4, 1fr); }
+    }
+    .dayCard{
+      position:relative;
+      border-radius: 22px;
+      overflow:hidden;
+      min-height: 135px;
+      border: 1px solid rgba(255,255,255,.75);
+      background: rgba(255,255,255,.55);
+      box-shadow: 0 14px 30px rgba(0,0,0,.12);
+      cursor:pointer;
+      transition: transform .15s ease;
+    }
+    .dayCard:active{ transform: scale(.99); }
+    .dayCard .inner{
+      padding: 14px 14px 12px;
+      position:relative;
+      z-index:2;
+    }
+    .dayName{
+      margin:0;
+      font-size: 16px;
+      font-weight: 1000;
+    }
+    .dayDate{
+      margin:6px 0 0;
+      font-size: 12px;
+      font-weight: 900;
+      color: rgba(17,24,39,.65);
+    }
+    .status{
+      margin-top:10px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      border: 1px solid rgba(255,255,255,.85);
+      font-weight: 950;
+      font-size: 12px;
+    }
+    .locked{ color:#6b7280; }
+    .open{ color:#0f766e; }
+
+    .spark{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(600px 320px at 20% 20%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(600px 320px at 80% 80%, rgba(255,255,255,.35), transparent 60%);
+      opacity:.7;
+      pointer-events:none;
+    }
+
+    /* --------- FULLSCREEN DAY VIEW --------- */
+    #dayView{
+      position:fixed;
+      inset:0;
+      z-index:9998;
+      display:none;
+      place-items:center;
+      padding: 18px;
+      background: rgba(0,0,0,.55);
+    }
+    #dayView.show{ display:grid; }
+
+    .dayPanel{
+      width:min(860px, 96vw);
+      border-radius: 26px;
+      overflow:hidden;
+      background:#000;
+      box-shadow: 0 28px 90px rgba(0,0,0,.55);
+      position:relative;
+    }
+    .bgImage{
+      position:absolute;
+      inset:0;
+      background-size:cover;
+      background-position:center;
+      transform: scale(1.02);
+      filter: saturate(1.02) contrast(1.02);
+    }
+    .bgImage::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.65));
+    }
+
+    .panelContent{
+      position:relative;
+      z-index:2;
+      padding: 18px 18px 16px;
+      color:#fff;
+    }
+    .panelTop{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .panelTitle{
+      margin:0;
+      font-size: 24px;
+      font-weight: 1000;
+      letter-spacing:.2px;
+      text-shadow: 0 10px 30px rgba(0,0,0,.55);
+    }
+    .panelMeta{
+      margin:6px 0 0;
+      font-weight:900;
+      opacity:.88;
+    }
+    .closeBtn{
       border:0;
+      border-radius: 999px;
+      padding: 10px 12px;
+      cursor:pointer;
+      font-weight:1000;
+      background: rgba(255,255,255,.92);
+      color:#111827;
+    }
+
+    .letterBox{
+      margin-top:14px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 18px;
+      padding: 14px;
+      backdrop-filter: blur(6px);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      font-weight: 750;
+    }
+
+    .countdownRow{
+      margin-top: 12px;
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .miniPill{
+      padding:10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(6px);
+      font-weight: 950;
+      font-size: 13px;
     }
 
     /* Hearts */
     .heart{
       position:fixed;
-      bottom:-30px;
-      font-size:20px;
+      bottom:-40px;
+      font-size:22px;
       animation: floatUp linear forwards;
+      z-index:1;
       pointer-events:none;
       filter: drop-shadow(0 8px 12px rgba(0,0,0,.20));
-      z-index:1;
     }
     @keyframes floatUp{
       from{ transform: translateY(0) translateX(0) rotate(0deg); opacity:0; }
@@ -320,369 +375,398 @@
 </head>
 
 <body>
-  <!-- ENTER OVERLAY -->
-  <div id="enterOverlay">
-    <div class="enterCard">
-      <h2 class="enterTitle">Valentine’s Week 💗</h2>
-      <div class="enterSub">Tap once to enter (this allows music to play) 🎶</div>
-      <div class="enterBtn" id="enterBtn">Tap to <span>enter</span> ✨</div>
-      <div style="margin-top:10px; color:#6b7280; font-weight:800; font-size:12px;">
-        After entering, each day opens only on its date (7 → 14).
-      </div>
+
+  <!-- TAP-TO-ENTER OVERLAY (iPhone-safe) -->
+  <div id="gate" aria-label="Tap to enter gate">
+    <div class="gateCard">
+      <h2 class="gateTitle">Valentine’s Week 💗</h2>
+      <div class="gateSub">Tap once to enter (this allows music to play) 🎶</div>
+
+      <!-- IMPORTANT: real BUTTON + onclick -->
+      <button id="enterBtn" class="enterBtn" onclick="enterSite()">Tap to <span>enter</span> ✨</button>
+
+      <div class="gateHint">After entering, each day opens only on its date (7 → 14).</div>
+      <div class="tiny">Tip: If music doesn’t start, tap Play on the top bar.</div>
     </div>
   </div>
 
-  <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <div class="badge">💗</div>
-        <div>
-          <h1>Valentine’s Week Surprise</h1>
-          <div class="sub">Days unlock only when the countdown ends ✨</div>
-        </div>
-      </div>
-
-      <div class="hint">
-        <b>Rule:</b> No early access ✅<br/>
-        Locked cards will shake if tapped 🔒
-      </div>
-    </div>
-
-    <div class="grid" id="grid"></div>
-  </div>
-
-  <!-- MODAL -->
-  <div id="modal" aria-modal="true" role="dialog">
-    <div class="modalBg" id="modalBg"></div>
-    <div class="modalShade"></div>
-
-    <div class="modalCard">
-      <div class="modalTop">
-        <h2 id="modalTitle">Day</h2>
-        <button class="closeBtn" id="closeBtn">✕</button>
-      </div>
-
-      <div class="modalBody">
-        <div class="storyBox" id="modalStory"></div>
-
-        <div class="controls">
-          <span class="pill" id="musicLabel">Music: Off</span>
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <button class="btn" id="musicToggle">Play music 🎶</button>
-            <button class="btn primary" id="moreHearts">Hearts ✨</button>
+  <!-- MAIN APP -->
+  <div id="app">
+    <div class="topCard">
+      <div class="headerRow">
+        <div class="brand">
+          <div class="badge">💘</div>
+          <div class="brandText">
+            <h1>Valentine’s Week (Feb 7 → 14)</h1>
+            <p>One surprise each day • locked until its date</p>
           </div>
         </div>
+
+        <div class="controls">
+          <button class="pill primary" id="musicBtn" onclick="toggleMusic()">Play music 🎶</button>
+          <button class="pill" onclick="burstHearts()">Hearts ✨</button>
+        </div>
+      </div>
+
+      <div class="grid" id="daysGrid"></div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN DAY VIEW -->
+  <div id="dayView" role="dialog" aria-modal="true">
+    <div class="dayPanel">
+      <div class="bgImage" id="bgImage"></div>
+
+      <div class="panelContent">
+        <div class="panelTop">
+          <div>
+            <h2 class="panelTitle" id="panelTitle">Day</h2>
+            <div class="panelMeta" id="panelMeta">Date</div>
+          </div>
+          <button class="closeBtn" onclick="closeDay()">✕ Close</button>
+        </div>
+
+        <div class="countdownRow">
+          <div class="miniPill" id="openStatus">Status</div>
+          <div class="miniPill" id="countdownPill">Countdown</div>
+        </div>
+
+        <div class="letterBox" id="letterBox"></div>
       </div>
     </div>
   </div>
 
-  <!-- ONE AUDIO PLAYER (we swap source per day) -->
-  <audio id="player" loop preload="none"></audio>
+  <!-- ONE AUDIO TAG; we swap the src per day -->
+  <audio id="bgm" loop preload="auto">
+    <!-- src set by JS -->
+  </audio>
 
   <script>
-    // ======================
-    // IMPORTANT: SET YEAR HERE
-    // ======================
-    const YEAR = new Date().getFullYear(); // keep current year
-    const MONTH = 2; // February (2)
+    // ===========================
+    // 1) EDIT ONLY THIS SECTION
+    // ===========================
+    // Put your images and songs in the SAME repo folder as index.html.
+    // Example filenames: rose.jpg, rose.mpeg, etc.
 
-    // Days 7 to 14
-    const days = [
+    const YEAR = new Date().getFullYear();     // uses current year automatically
+    const MONTH_INDEX = 1;                     // February = 1 (Jan=0, Feb=1)
+
+    const DAYS = [
       {
-        day:7, title:"Rose Day", emoji:"🌹",
-        img:"07-rose.jpg", song:"07-rose.mpeg",
-        story:
-`🌹 Rose Day
-Some loves begin softly… like a rose petal.
-Today I’m sending you a rose not just as a flower,
-but as a feeling — gentle, pure, and only yours. 🤍`
+        day: 7,  name: "Rose Day 🌹",
+        img: "7-rose.jpg",
+        song: "7-rose.mpeg",
+        letter:
+`Rose Day 🌹
+A rose is soft… but its meaning is strong.
+Like us — gentle love, deep bond.
+
+Today’s rose is a small reminder:
+“Even in silence, I choose you.”`
       },
       {
-        day:8, title:"Propose Day", emoji:"💍",
-        img:"08-propose.jpg", song:"08-propose.mpeg",
-        story:
-`💍 Propose Day
-If life asked me again, “Whom do you choose?”
-My heart would answer your name — every time.
-Not once. Not sometimes. Always. 💖`
+        day: 8,  name: "Propose Day 💍",
+        img: "8-propose.jpg",
+        song: "8-propose.mpeg",
+        letter:
+`Propose Day 💍
+If I had to choose again,
+I’d still choose you — again and again.
+
+Not for one day…
+but for a lifetime.`
       },
       {
-        day:9, title:"Chocolate Day", emoji:"🍫",
-        img:"09-chocolate.jpg", song:"09-chocolate.mpeg",
-        story:
-`🍫 Chocolate Day
-You make my life sweeter in the smallest ways.
-Even ordinary moments feel like a celebration
-when they’re shared with you. 🍫✨`
+        day: 9,  name: "Chocolate Day 🍫",
+        img: "9-chocolate.jpg",
+        song: "9-chocolate.mpeg",
+        letter:
+`Chocolate Day 🍫
+Sweet moments, small fights, silly laughs…
+everything tastes better with you.
+
+You are my favorite comfort.`
       },
       {
-        day:10, title:"Teddy Day", emoji:"🧸",
-        img:"10-teddy.jpg", song:"10-teddy.mpeg",
-        story:
-`🧸 Teddy Day
-A teddy is soft… but you are my safest comfort.
-When the world feels heavy, your love feels like home.
-Always warm. Always mine. 🤍`
+        day: 10, name: "Teddy Day 🧸",
+        img: "10-teddy.jpg",
+        song: "10-teddy.mpeg",
+        letter:
+`Teddy Day 🧸
+When the world feels heavy,
+your hug feels like home.
+
+Stay close… always.`
       },
       {
-        day:11, title:"Promise Day", emoji:"🤝",
-        img:"11-promise.jpg", song:"11-promise.mpeg",
-        story:
-`🤝 Promise Day
-I promise to choose you in every season —
-in calm days and chaotic days,
-in silence and laughter,
-in today and forever. 🤍`
+        day: 11, name: "Promise Day 🤝",
+        img: "11-promise.jpg",
+        song: "11-promise.mpeg",
+        letter:
+`Promise Day 🤝
+I promise to listen,
+I promise to grow,
+I promise to hold your hand —
+even on the hard days.`
       },
       {
-        day:12, title:"Hug Day", emoji:"🤗",
-        img:"12-hug.jpg", song:"12-hug.mpeg",
-        story:
-`🤗 Hug Day
-If you could feel my heart right now,
-you’d know it’s hugging you tightly —
-even from far away. 🤗💗`
+        day: 12, name: "Hug Day 🤗",
+        img: "12-hug.jpg",
+        song: "12-hug.mpeg",
+        letter:
+`Hug Day 🤗
+One hug can fix a thousand thoughts.
+So here is mine —
+tight, warm, forever.`
       },
       {
-        day:13, title:"Kiss Day", emoji:"💋",
-        img:"13-kiss.jpg", song:"13-kiss.mpeg",
-        story:
-`💋 Kiss Day
-A kiss is small… but it holds a whole world.
-Today, I’m sending you mine —
-soft, true, and full of love. 💋`
+        day: 13, name: "Kiss Day 💋",
+        img: "13-kiss.jpg",
+        song: "13-kiss.mpeg",
+        letter:
+`Kiss Day 💋
+Not just a kiss…
+a promise in a heartbeat:
+“I’m yours, and you’re mine.”`
       },
       {
-        day:14, title:"Valentine’s Day", emoji:"❤️",
-        img:"14-valentine.jpg", song:"14-valentine.mpeg",
-        story:
-`❤️ Valentine’s Day
-You are my favorite person, my answered prayer, my peace.
-If love had a name, it would sound like you.
-Happy Valentine’s Day, my love… now and always. ❤️✨`
+        day: 14, name: "Valentine’s Day ❤️",
+        img: "14-valentine.jpg",
+        song: "14-valentine.mpeg",
+        letter:
+`Valentine’s Day ❤️
+From Rose Day to today…
+every day was a step to you.
+
+And my favorite story is still:
+“Us.”`
       }
     ];
 
-    function unlockDate(d){
-      return new Date(YEAR, MONTH-1, d, 0,0,0); // local midnight
-    }
-    function isSameDay(a,b){
-      return a.getFullYear()===b.getFullYear() &&
-             a.getMonth()===b.getMonth() &&
-             a.getDate()===b.getDate();
-    }
-    function pad2(n){ return String(n).padStart(2,'0'); }
+    // ===========================
+    // 2) APP LOGIC (no need to edit)
+    // ===========================
 
-    const grid = document.getElementById('grid');
-    const modal = document.getElementById('modal');
-    const modalBg = document.getElementById('modalBg');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalStory = document.getElementById('modalStory');
+    const gate = document.getElementById("gate");
+    const app = document.getElementById("app");
+    const daysGrid = document.getElementById("daysGrid");
 
-    const enterOverlay = document.getElementById('enterOverlay');
-    const enterBtn = document.getElementById('enterBtn');
+    const dayView = document.getElementById("dayView");
+    const bgImage = document.getElementById("bgImage");
+    const panelTitle = document.getElementById("panelTitle");
+    const panelMeta = document.getElementById("panelMeta");
+    const letterBox = document.getElementById("letterBox");
+    const openStatus = document.getElementById("openStatus");
+    const countdownPill = document.getElementById("countdownPill");
 
-    const player = document.getElementById('player');
-    const musicToggle = document.getElementById('musicToggle');
-    const musicLabel = document.getElementById('musicLabel');
-    const closeBtn = document.getElementById('closeBtn');
-    const moreHearts = document.getElementById('moreHearts');
+    const bgm = document.getElementById("bgm");
+    const musicBtn = document.getElementById("musicBtn");
 
-    let audioAllowed = false;   // becomes true after first tap (enter)
-    let currentDay = null;
     let isPlaying = false;
+    let currentDayIndex = null;
+    let countdownTimer = null;
 
-    // ====== Render cards ======
-    function formatDiff(ms){
-      if(ms < 0) ms = 0;
+    function dateFor(dayNum){
+      // opens at local midnight (00:00) on that date
+      return new Date(YEAR, MONTH_INDEX, dayNum, 0, 0, 0);
+    }
+
+    function now(){
+      return new Date();
+    }
+
+    function isUnlocked(dayNum){
+      return now().getTime() >= dateFor(dayNum).getTime();
+    }
+
+    function msToParts(ms){
+      ms = Math.max(0, ms);
       const s = Math.floor(ms/1000);
       const d = Math.floor(s/86400);
       const h = Math.floor((s%86400)/3600);
       const m = Math.floor((s%3600)/60);
-      const ss = s%60;
-      if(d>0) return `${d}d ${h}h ${m}m ${ss}s`;
-      if(h>0) return `${h}h ${m}m ${ss}s`;
-      return `${m}m ${ss}s`;
+      const sec = s%60;
+      return {d,h,m,sec};
     }
 
-    function render(){
-      const now = new Date();
-      grid.innerHTML = "";
+    function setMusicButton(){
+      musicBtn.textContent = isPlaying ? "Pause music ⏸️" : "Play music 🎶";
+    }
 
-      days.forEach(item=>{
-        const openAt = unlockDate(item.day);
-        const openNow = now >= openAt || isSameDay(now, openAt);
-        const isToday = isSameDay(now, openAt);
+    async function playMusic(){
+      try{
+        bgm.loop = true;             // repeat continuously
+        bgm.volume = 0.75;
+        await bgm.play();            // iPhone requires user gesture (we call this after tap)
+        isPlaying = true;
+        setMusicButton();
+      }catch(e){
+        // if iPhone blocks, user can press Play button again
+        isPlaying = false;
+        setMusicButton();
+      }
+    }
 
-        const card = document.createElement('div');
+    function pauseMusic(){
+      bgm.pause();
+      isPlaying = false;
+      setMusicButton();
+    }
+
+    async function toggleMusic(){
+      if(!isPlaying){
+        await playMusic();
+      }else{
+        pauseMusic();
+      }
+    }
+
+    function setSong(src){
+      if(!src) return;
+      if(bgm.getAttribute("src") === src) return;
+
+      // Stop current
+      bgm.pause();
+      isPlaying = false;
+
+      // Set new source
+      bgm.setAttribute("src", src);
+      bgm.load();
+      setMusicButton();
+    }
+
+    // iPhone-safe enter
+    window.enterSite = async function enterSite(){
+      document.body.classList.add("entered");
+
+      // Default song: today’s day if unlocked, else nearest upcoming (or day7)
+      const unlocked = DAYS.filter(d => isUnlocked(d.day));
+      const chosen = unlocked.length ? unlocked[unlocked.length-1] : DAYS[0];
+
+      setSong(chosen.song);
+
+      // Start music after the tap (gesture exists)
+      await playMusic();
+
+      burstHearts(12);
+    };
+
+    function renderGrid(){
+      daysGrid.innerHTML = "";
+      DAYS.forEach((d, idx) => {
+        const unlocked = isUnlocked(d.day);
+
+        const card = document.createElement("div");
         card.className = "dayCard";
+        card.innerHTML = `
+          <div class="spark"></div>
+          <div class="inner">
+            <h3 class="dayName">${d.name}</h3>
+            <div class="dayDate">Feb ${d.day}, ${YEAR}</div>
+            <div class="status ${unlocked ? "open" : "locked"}">
+              ${unlocked ? "✅ Open" : "🔒 Locked"}
+              <span style="opacity:.6">•</span>
+              <span style="opacity:.9">${unlocked ? "Tap to view" : "Wait for date"}</span>
+            </div>
+          </div>
+        `;
 
-        const t = document.createElement('div');
-        t.className = "dayTitle";
-        t.innerHTML = `${item.emoji} ${item.title}`;
-
-        const dateLine = document.createElement('div');
-        dateLine.className = "dateLine";
-        dateLine.textContent = `${openAt.toDateString()}`;
-
-        const status = document.createElement('div');
-        status.className = "status";
-        if(isToday){
-          status.classList.add("today");
-          status.textContent = "Opens today ✨";
-        }else if(openNow){
-          status.classList.add("open");
-          status.textContent = "Open 💖";
-        }else{
-          status.classList.add("locked");
-          status.textContent = "Locked 🔒";
-        }
-
-        const cd = document.createElement('div');
-        cd.className = "countmini";
-        if(openNow){
-          cd.textContent = "Unlocked ✅";
-        }else{
-          cd.textContent = "Unlocks in: " + formatDiff(openAt - now);
-        }
-
-        card.appendChild(t);
-        card.appendChild(dateLine);
-        card.appendChild(status);
-        card.appendChild(cd);
-
-        if(!openNow){
-          const overlay = document.createElement('div');
-          overlay.className = "lockOverlay";
-          overlay.innerHTML = `<div class="lockBox">
-            <b>Not yet 💗</b>
-            <small>Wait until ${openAt.toDateString()}</small>
-          </div>`;
-          card.appendChild(overlay);
-        }
-
-        card.addEventListener('click', ()=>{
-          const now2 = new Date();
-          const openNow2 = now2 >= openAt || isSameDay(now2, openAt);
-          if(!openNow2){
-            card.classList.remove("shake");
-            void card.offsetWidth; // restart animation
-            card.classList.add("shake");
-            burstHearts(6);
-            return;
-          }
-          openModal(item);
-        });
-
-        grid.appendChild(card);
+        card.addEventListener("click", () => openDay(idx));
+        daysGrid.appendChild(card);
       });
     }
 
-    // update countdown every second
-    setInterval(render, 1000);
-    render();
+    function openDay(idx){
+      currentDayIndex = idx;
+      const d = DAYS[idx];
+      const unlocked = isUnlocked(d.day);
 
-    // ====== Modal open/close ======
-    function openModal(item){
-      currentDay = item;
-      modalTitle.textContent = `${item.emoji} ${item.title} (Feb ${item.day})`;
-      modalStory.textContent = item.story;
+      // Always show fullscreen; if locked, show countdown + lock message.
+      dayView.classList.add("show");
+      bgImage.style.backgroundImage = `url('${d.img}')`;
+      panelTitle.textContent = d.name;
+      panelMeta.textContent = `Opens on Feb ${d.day}, ${YEAR} (12:00 AM)`;
 
-      // full screen background image
-      modalBg.style.backgroundImage = `url('${item.img}')`;
+      // Use day’s song (and try autoplay if already playing / after user tap on grid)
+      setSong(d.song);
 
-      // swap music for the day
-      player.pause();
-      isPlaying = false;
-      updateMusicUI();
+      // Try play (works if user already entered; still safe)
+      playMusic();
 
-      player.innerHTML = `<source src="${item.song}" type="audio/mpeg">`;
-      player.load();
+      if(countdownTimer) clearInterval(countdownTimer);
 
-      modal.classList.add("show");
-      burstHearts(12);
+      function updateLock(){
+        const target = dateFor(d.day).getTime();
+        const diff = target - now().getTime();
 
-      // try autoplay ONLY if user already tapped "enter"
-      if(audioAllowed){
-        tryPlay();
+        if(unlocked || diff <= 0){
+          openStatus.textContent = "✅ Open now";
+          countdownPill.textContent = "Enjoy 💗";
+          letterBox.textContent = d.letter;
+          clearInterval(countdownTimer);
+          countdownTimer = null;
+          return;
+        }
+
+        const t = msToParts(diff);
+        openStatus.textContent = "🔒 Locked";
+        countdownPill.textContent = `Opens in ${t.d}d ${t.h}h ${t.m}m ${t.sec}s`;
+        letterBox.textContent =
+`This surprise is date-locked 💗
+
+Come back on Feb ${d.day} to unlock it.
+
+(You can still listen to the background music here 🎶)`;
       }
+
+      updateLock();
+      countdownTimer = setInterval(updateLock, 1000);
+
+      burstHearts(8);
     }
 
-    function closeModal(){
-      modal.classList.remove("show");
-      player.pause();
-      isPlaying = false;
-      updateMusicUI();
-      currentDay = null;
+    function closeDay(){
+      dayView.classList.remove("show");
+      if(countdownTimer) clearInterval(countdownTimer);
+      countdownTimer = null;
     }
+    window.closeDay = closeDay;
 
-    closeBtn.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e)=>{
-      if(e.target === modal) closeModal();
+    // Close when tapping outside panel
+    dayView.addEventListener("click", (e) => {
+      if(e.target === dayView) closeDay();
     });
 
-    // ====== Music controls ======
-    function updateMusicUI(){
-      musicLabel.textContent = isPlaying ? "Music: On 🎶" : "Music: Off";
-      musicToggle.textContent = isPlaying ? "Pause music ⏸️" : "Play music 🎶";
-    }
-
-    async function tryPlay(){
-      try{
-        player.volume = 0.7;
-        await player.play();
-        isPlaying = true;
-        updateMusicUI();
-      }catch(e){
-        // blocked
-        isPlaying = false;
-        updateMusicUI();
+    // Hearts
+    function spawnHeart(x=null, count=1){
+      for(let i=0;i<count;i++){
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = ["❤","💖","💘","💝","💕"][Math.floor(Math.random()*5)];
+        const left = x ?? (Math.random()*100);
+        h.style.left = left + "vw";
+        h.style.setProperty("--drift", (Math.random()*120 - 60) + "px");
+        const dur = 5 + Math.random()*4;
+        h.style.animationDuration = dur + "s";
+        h.style.fontSize = (18 + Math.random()*18) + "px";
+        document.body.appendChild(h);
+        setTimeout(()=>h.remove(), dur*1000);
       }
     }
+    function burstHearts(n=18){ for(let i=0;i<n;i++) spawnHeart(null, 1); }
+    window.burstHearts = burstHearts;
 
-    musicToggle.addEventListener('click', async ()=>{
-      audioAllowed = true; // user clicked
-      if(!isPlaying){
-        await tryPlay();
-      }else{
-        player.pause();
-        isPlaying = false;
-        updateMusicUI();
-      }
+    // Small auto hearts after entering
+    setInterval(()=>{ if(document.body.classList.contains("entered")) spawnHeart(); }, 900);
+    document.addEventListener("click", (e)=>{
+      if(!document.body.classList.contains("entered")) return;
+      const vw = (e.clientX / window.innerWidth) * 100;
+      spawnHeart(vw, 2);
     });
 
-    // ====== Enter overlay (first tap enables autoplay attempts) ======
-    enterBtn.addEventListener('click', async ()=>{
-      audioAllowed = true;
-
-      // "prime" the audio system with a tiny play attempt (works on iPhone)
-      try{
-        player.volume = 0.001;
-        await player.play();
-        player.pause();
-        player.volume = 0.7;
-      }catch(e){}
-
-      enterOverlay.classList.add('hidden');
-      burstHearts(14);
-    });
-
-    // ====== Hearts ======
-    function spawnHeart(){
-      const h = document.createElement('div');
-      h.className = 'heart';
-      h.textContent = ['❤','💖','💘','💝','💕'][Math.floor(Math.random()*5)];
-      h.style.left = (Math.random()*100) + 'vw';
-      h.style.setProperty('--drift', (Math.random()*120 - 60) + 'px');
-      const dur = 5 + Math.random()*4;
-      h.style.animationDuration = dur + 's';
-      h.style.fontSize = (18 + Math.random()*16) + 'px';
-      document.body.appendChild(h);
-      setTimeout(()=>h.remove(), dur*1000);
-    }
-    function burstHearts(n=14){ for(let i=0;i<n;i++) spawnHeart(); }
-    setInterval(()=>spawnHeart(), 900);
-    moreHearts.addEventListener('click', ()=>burstHearts(18));
+    // Init
+    renderGrid();
+    setMusicButton();
   </script>
 </body>
 </html>
